@@ -32,6 +32,9 @@ from applications.entites.models import (
     Salle,
     entites_autorisees,
 )
+from applications.notifications.tasks import (
+    programmer_notification_validation_inscription,
+)
 from applications.resultats.models import Resultat
 
 
@@ -41,8 +44,11 @@ class ValidationInscriptionView(EntiteAdminRequiredMixin, View):
             inscription = get_object_or_404(
                 self.get_queryset().select_for_update(), pk=pk
             )
+            ancien_statut = inscription.statut
             inscription.statut = Inscription.Statut.VALIDE
             inscription.save(update_fields=["statut"])
+            if ancien_statut != Inscription.Statut.VALIDE:
+                programmer_notification_validation_inscription(inscription.pk)
             JournalAction.objects.create(
                 utilisateur=request.user,
                 inscription=inscription,

@@ -1,0 +1,18 @@
+Université d'État d'Haïti (UEH)
+Validation d'inscription
+
+Bonjour {{ nom_candidat }},
+
+Nous avons le plaisir de vous informer que votre inscription à {{ entite.nom }} a été validée avec succès.
+
+Détails de votre inscription :
+Numéro de dossier : {{ numero_dossier }}
+Année académique : {{ annee_academique }}
+
+Vous recevrez prochainement d'autres informations concernant la suite du processus d'admission.
+Nous vous félicitons pour cette étape importante de votre parcours académique.
+
+Cordialement,
+Concours d'Admission, UEH
+
+Cet email a été envoyé automatiquement. Merci de ne pas y répondre.

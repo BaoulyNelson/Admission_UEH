@@ -565,25 +565,37 @@ class AccesParEntiteTests(TestCase):
         page_superuser = self.client.get(url)
         self.assertEqual(page_superuser.status_code, 200)
         self.assertContains(page_superuser, '<select name="statut"', html=False)
-        reponse = self.client.post(
-            url,
-            {
-                "entite": self.entite_a.pk,
-                "option": "",
-                "annee_academique": "2026-2027",
-                "horaire": "",
-                "seq": "",
-                "till": "",
-                "date_depot": "",
-                "recu_paiement": "",
-                "salle": "",
-                "statut": Inscription.Statut.VALIDE,
-                "_save": "Enregistrer",
-            },
-        )
+        donnees = {
+            "entite": self.entite_a.pk,
+            "option": "",
+            "annee_academique": "2026-2027",
+            "horaire": "",
+            "seq": "",
+            "till": "",
+            "date_depot": "",
+            "recu_paiement": "",
+            "salle": "",
+            "statut": Inscription.Statut.VALIDE,
+            "_save": "Enregistrer",
+        }
+        mail.outbox.clear()
+        with self.captureOnCommitCallbacks(execute=True):
+            reponse = self.client.post(url, donnees)
         self.assertEqual(reponse.status_code, 302)
         self.inscription_a.refresh_from_db()
         self.assertEqual(self.inscription_a.statut, Inscription.Statut.VALIDE)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, [self.utilisateur_candidat.email])
+        self.assertEqual(mail.outbox[0].subject, "Validation de votre inscription - UEH")
+        self.assertIn("Faculté des Sciences", mail.outbox[0].body)
+        self.assertIn("Numéro de dossier", mail.outbox[0].body)
+        self.assertIn("2026-2027", mail.outbox[0].body)
+        self.assertEqual(mail.outbox[0].alternatives[0][1], "text/html")
+        self.assertIn("Validation d'inscription", mail.outbox[0].alternatives[0][0])
+        with self.captureOnCommitCallbacks(execute=True):
+            reponse = self.client.post(url, donnees)
+        self.assertEqual(reponse.status_code, 302)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertTrue(
             JournalAction.objects.filter(
                 utilisateur=superutilisateur,

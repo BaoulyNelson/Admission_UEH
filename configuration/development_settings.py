@@ -11,7 +11,9 @@ DATABASES = {
         "NAME": BASE_DIR / "dev.sqlite3",
     }
 }
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+)
 CELERY_TASK_ALWAYS_EAGER = True
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 CACHES = {

@@ -14,6 +14,9 @@ from applications.entites.models import (
     Salle,
     entites_autorisees,
 )
+from applications.notifications.tasks import (
+    programmer_notification_validation_inscription,
+)
 
 
 class FiltreEntiteAutorisee(SimpleListFilter):
@@ -154,8 +157,11 @@ class InscriptionAdmin(admin.ModelAdmin):
     def valider_inscriptions(self, request, queryset):
         with transaction.atomic():
             for inscription in queryset.select_for_update():
+                ancien_statut = inscription.statut
                 inscription.statut = Inscription.Statut.VALIDE
                 inscription.save(update_fields=["statut"])
+                if ancien_statut != Inscription.Statut.VALIDE:
+                    programmer_notification_validation_inscription(inscription.pk)
                 JournalAction.objects.create(
                     utilisateur=request.user,
                     inscription=inscription,
@@ -188,6 +194,8 @@ class InscriptionAdmin(admin.ModelAdmin):
             ancien_statut = type(obj).objects.get(pk=obj.pk).statut
         super().save_model(request, obj, form, change)
         if change and ancien_statut != obj.statut:
+            if obj.statut == Inscription.Statut.VALIDE:
+                programmer_notification_validation_inscription(obj.pk)
             JournalAction.objects.create(
                 utilisateur=request.user,
                 inscription=obj,

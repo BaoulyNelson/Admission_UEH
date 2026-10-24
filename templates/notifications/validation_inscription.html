@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+  <body style="margin:0;padding:24px 12px;background:#f5f6f8;font-family:Arial,Helvetica,sans-serif;color:#222;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:540px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;">
+      <tr>
+        <td style="padding:30px 20px;background:#2860e8;color:#fff;text-align:center;">
+          <h1 style="margin:0 0 16px;font-size:20px;">Université d'État d'Haïti (UEH)</h1>
+          <p style="margin:0;font-size:12px;">Validation d'inscription</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:32px 20px 20px;">
+          <h2 style="margin:0 0 16px;font-size:16px;">Bonjour {{ nom_candidat }},</h2>
+          <p style="margin:0 0 12px;font-size:13px;line-height:1.6;">
+            Nous avons le plaisir de vous informer que votre inscription à
+            <strong>{{ entite.nom }}</strong> a été validée avec succès.
+          </p>
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:12px 0 24px;background:#e3f2fd;border-left:4px solid #2860e8;">
+            <tr>
+              <td style="padding:16px 12px;font-size:13px;line-height:1.8;">
+                <strong>Détails de votre inscription :</strong><br>
+                📋 Numéro de dossier : {{ numero_dossier }}<br>
+                📅 Année académique : {{ annee_academique }}
+              </td>
+            </tr>
+          </table>
+          <p style="margin:0 0 10px;font-size:13px;line-height:1.6;">
+            Vous recevrez prochainement d'autres informations concernant la suite du processus d'admission.
+          </p>
+          <p style="margin:0;font-size:13px;line-height:1.6;">
+            Nous vous félicitons pour cette étape importante de votre parcours académique.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:0 20px 20px;text-align:center;color:#555;font-size:12px;line-height:1.6;">
+          Cordialement,<br>
+          Concours d'Admission, UEH
+          <hr style="margin:16px 0;border:0;border-top:1px solid #e5e5e5;">
+          <em>Cet email a été envoyé automatiquement. Merci de ne pas y répondre.</em>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
